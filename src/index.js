@@ -17,7 +17,6 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(errorHandler);
-app.use('/', (req, res) => { res.send('Api running 🚀') });
 // Usar rutas
 const api = 'api';
 app.use(`/${api}/products`, productRoutes);
