@@ -1,0 +1,253 @@
+### Registrar usuario
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+  
+{
+    "name": "Sandro",
+    "email": "root@hacker.com",
+    "password": "root123456",
+    "role": "ROOT"
+}
+
+### Iniciar sesión
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+
+{
+    "email": "root@hacker.com",
+    "password": "root123456"
+}
+
+### Refrescar el Token
+POST http://localhost:3000/api/users/refresh-token
+Content-Type: application/json
+
+{
+    "refreshToken": "216abfa6-4c90-4eff-a072-b72a769dc551"
+}
+
+### Obtener perfil del usuario autenticado
+GET http://localhost:3000/api/users/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEwNDY4MDIsImV4cCI6MTc0MTEzMzIwMn0.jPt30D1K9XkLIZP8xfWOgmxjUnuVaq9L1PVhLf0FIPs
+Content-Type: application/json
+
+
+### Obtener todos los usuarios con paginación
+GET http://localhost:3000/api/users?page=1&limit=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyMTMwNTUsImV4cCI6MTc0MTI5OTQ1NX0.y1GnhK1hR-2dAqxvysRNmico5lkl6xunvt_xI3f4Cec
+
+
+### Obtener todas las categorías
+GET http://localhost:3000/api/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyMzM0NDksImV4cCI6MTc0MTMxOTg0OX0.ielc2nbNJWNQGt1hl_ay-9Yu2euZp6W-G_3op0-5rx0
+
+### Crear una categoría
+POST http://localhost:3000/api/categories
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyNDAxMTEsImV4cCI6MTc0MTMyNjUxMX0.F72OFLbWK5OW1pkWnv8ffusZvqh4p5OZeS8XcMduJtc
+Content-Type: application/json
+
+{
+    "name": "Teclados"
+}
+
+### Actualizar una categoría
+PUT http://localhost:3000/api/categories/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDA4MDE2MDEsImV4cCI6MTc0MDg4ODAwMX0.tx724HkVQmyTYxRFup5DQgOSmWW52H6oFD8FEHtijAs
+Content-Type: application/json
+
+{
+    "name": "TecnologíaED"
+}
+
+### Obtener todos los productos
+GET http://localhost:3000/api/products?page=1&limit=10&searchTerm=camara
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyNDAxMTEsImV4cCI6MTc0MTMyNjUxMX0.F72OFLbWK5OW1pkWnv8ffusZvqh4p5OZeS8XcMduJtc
+
+
+### Crear un producto (Necesita autenticación)
+POST http://localhost:3000/api/products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyNDAxMTEsImV4cCI6MTc0MTMyNjUxMX0.F72OFLbWK5OW1pkWnv8ffusZvqh4p5OZeS8XcMduJtc
+Content-Type: application/json
+
+{
+    "name": "Laptop",
+    "description": "Laptop de última generación",
+    "price": 1200.50,
+    "unit_type": "Unidad",
+    "id_category": 1
+}
+
+###  Actualizar un producto
+PUT http://localhost:3000/api/products/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyNDAxMTEsImV4cCI6MTc0MTMyNjUxMX0.F72OFLbWK5OW1pkWnv8ffusZvqh4p5OZeS8XcMduJtc
+Content-Type: application/json
+
+{
+    "name": "Keyboard LS",
+    "description": "Laptop con mejores especificaciones",
+    "sku":"HACKERD",
+    "price": 1500.00,
+    "unit_type": "Unidad",
+    "id_category": 1,
+    "status":false
+}
+
+### buscar cliente por DNI
+GET http://localhost:3000/api/customers/search?dni=12345678
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MjEyMjYsImV4cCI6MTc0MTgwNzYyNn0.IaG_SvMo8YjQH_6NNrj6o9FAp3dbLcMKVYH1XdGAvjs
+Content-Type: application/json
+
+
+### Obtener todos los clientes
+GET http://localhost:3000/api/customers?page=1&limit=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE1NDI5ODYsImV4cCI6MTc0MTYyOTM4Nn0.7T-j2Lkhk53pazpI8G30H7W9dkXZls3i7tuYOnGI34Q
+
+### Crear un cliente
+POST http://localhost:3000/api/customers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MjUwMjEsImV4cCI6MTc0MTgxMTQyMX0.tM5JqbHFzrCdaR-wazaJDEozwpbJ_Yka6M4k0w2rLz8
+Content-Type: application/json
+
+{
+    "name": "Gabriela",
+    "first_surname": "Navarro",
+    "second_surname": "Mendoza",
+    "dni": "12345700"
+}
+
+
+### Actualizar un cliente
+PUT http://localhost:3000/api/customers/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE1NDI5ODYsImV4cCI6MTc0MTYyOTM4Nn0.7T-j2Lkhk53pazpI8G30H7W9dkXZls3i7tuYOnGI34Q
+Content-Type: application/json
+
+{
+    "name": "María",
+    "first_surname": "Fernández",
+    "second_surname": "García",
+    "dni": "45892713"
+}
+
+### Obtener el stock con páginanción y busqueda
+GET http://localhost:3000/api/stock?page=1&limit=10&searchTerm=DSLR
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MzIyNDgsImV4cCI6MTc0MTgxODY0OH0.aCZ2JPwzIDBV8Tg1ooSXepVJSy1s1gvnH3Q7XfLzbV0
+
+
+### Obtener todas las ventas
+GET http://localhost:3000/api/sales?page=1&limit=10&searchTerm=bcp
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MTg5NzksImV4cCI6MTc0MTgwNTM3OX0.5vcCNX6HyftOt7Syy7uVwhPcA0GxtyE15omgdb-gtYw
+###  Crear una venta
+POST http://localhost:3000/api/sales
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MzIyNDgsImV4cCI6MTc0MTgxODY0OH0.aCZ2JPwzIDBV8Tg1ooSXepVJSy1s1gvnH3Q7XfLzbV0
+Content-Type: application/json
+
+{
+    "id_user": 9,
+    "id_customer": 3,
+    "payment_method": "Tarjeta",
+    "details": [
+        {
+            "id_product": 37,
+            "quantity": 1,
+            "unit_price": 899.99
+        }
+    ]
+}
+
+###  Actualizar una venta
+PUT http://localhost:3000/api/sales/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MTg5NzksImV4cCI6MTc0MTgwNTM3OX0.5vcCNX6HyftOt7Syy7uVwhPcA0GxtyE15omgdb-gtYw
+Content-Type: application/json
+
+{
+    "id_customer": 2,
+    "payment_method": "Efectivo",
+    "details": [
+        {
+            "id_product": 2,
+            "quantity": 3,
+            "unit_price": 500.00
+        }
+    ]
+}
+
+### Obtener todos los proveedores
+GET http://localhost:3000/api/suppliers?page=1&limit=10&searchTerm=
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzAyNTksImV4cCI6MTc0MTQ1NjY1OX0.23tgBIFZGWAtXKxHqdXfEPovdzbZM12XWPr9qxGAXpU
+
+###  Crear un proveedor
+POST http://localhost:3000/api/suppliers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzAyNTksImV4cCI6MTc0MTQ1NjY1OX0.23tgBIFZGWAtXKxHqdXfEPovdzbZM12XWPr9qxGAXpU
+Content-Type: application/json
+
+{
+    "name": "Proveedor DDR",
+    "ruc": "123456786",
+    "contact": "Juan Pérez",
+    "phone": "987654321",
+    "address": "Av. Siempre Viva 123"
+}
+
+### Actualizar un proveedor
+PUT http://localhost:3000/api/suppliers/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzAyNTksImV4cCI6MTc0MTQ1NjY1OX0.23tgBIFZGWAtXKxHqdXfEPovdzbZM12XWPr9qxGAXpU
+Content-Type: application/json
+
+{
+    "name": "Proveedor ABC",
+    "ruc": "987654321",
+    "contact": "María Gómez",
+    "phone": "999888777",
+    "address": "Calle Falsa 456"
+}
+
+###  Obtener todas las recepciones
+GET http://localhost:3000/api/receptions?page=1&limit=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE0NjU4MjAsImV4cCI6MTc0MTU1MjIyMH0.hRSpYCeiwERRnRCnXVXrravNdDGFHXf7Vd7pwM0_4mQ
+
+
+### Crear una nueva recepción
+POST http://localhost:3000/api/receptions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzkzMzUsImV4cCI6MTc0MTQ2NTczNX0.tysc_sYSH1D3F596uQm3V9wnysCmNJSiM20d2klHvLk
+Content-Type: application/json
+
+{
+    "id_product": 44,
+    "quantity": 50,
+    "purchase_price": 170,
+    "id_supplier": 5,
+    "id_user": 7
+}
+
+### Actualizar una recepción
+PUT http://localhost:3000/api/receptions/7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzkzMzUsImV4cCI6MTc0MTQ2NTczNX0.tysc_sYSH1D3F596uQm3V9wnysCmNJSiM20d2klHvLk
+Content-Type: application/json
+
+{
+    "id_product": 9,
+    "quantity": 100,
+    "purchase_price": 100,
+    "id_supplier": 5,
+    "id_user": 8
+}
+
+
+###ventas totales por día, semana, mes y año.
+GET http://localhost:3000/api/dashboard/sales-summary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3NTE1NzMsImV4cCI6MTc0MTgzNzk3M30.2Ub1G8S54PW4y89S4fGIzAGZ3M_quTvJgBMWTcZ6Q6U
+
+###métodos de pago más utilizados.
+GET http://localhost:3000/api/dashboard/payment-methods
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3NTE1NzMsImV4cCI6MTc0MTgzNzk3M30.2Ub1G8S54PW4y89S4fGIzAGZ3M_quTvJgBMWTcZ6Q6U
+
+###productos más vendidos.
+GET http://localhost:3000/api/dashboard/top-products
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3NTE1NzMsImV4cCI6MTc0MTgzNzk3M30.2Ub1G8S54PW4y89S4fGIzAGZ3M_quTvJgBMWTcZ6Q6U
+
+###usuarios con más ventas.
+GET http://localhost:3000/api/dashboard/top-users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3NTE1NzMsImV4cCI6MTc0MTgzNzk3M30.2Ub1G8S54PW4y89S4fGIzAGZ3M_quTvJgBMWTcZ6Q6U
+
+###clientes con más compras.
+GET http://localhost:3000/api/dashboard/top-customers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3NTE1NzMsImV4cCI6MTc0MTgzNzk3M30.2Ub1G8S54PW4y89S4fGIzAGZ3M_quTvJgBMWTcZ6Q6U

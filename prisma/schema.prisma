@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Products {
+  id_product  Int      @id @default(autoincrement())
+  name        String
+  description String
+  sku         String?  @unique
+  price       Float
+  unit_type   String
+  status      Boolean  @default(true)
+  id_category Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category          Categories          @relation(fields: [id_category], references: [id_category])
+  ProductReceptions ProductReceptions[]
+  SaleDetails       SaleDetails[]
+  StockMovements    StockMovements[]
+
+  @@index([name])
+}
+
+model Categories {
+  id_category Int        @id @default(autoincrement())
+  name        String     @unique
+  products    Products[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([name])
+}
+
+model Suppliers {
+  id_supplier Int                 @id @default(autoincrement())
+  name        String              @unique
+  ruc         String              @unique
+  contact     String?
+  phone       String?
+  address     String?
+  receptions  ProductReceptions[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model ProductReceptions {
+  id_reception   Int      @id @default(autoincrement())
+  id_product     Int
+  quantity       Float
+  purchase_price Float
+  id_supplier    Int
+  id_user        Int
+  date           DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  product  Products  @relation(fields: [id_product], references: [id_product])
+  supplier Suppliers @relation(fields: [id_supplier], references: [id_supplier])
+  user     Users     @relation(fields: [id_user], references: [id_user])
+
+  @@index([date])
+  @@index([id_supplier])
+  @@index([id_user])
+}
+
+model Customers {
+  id_customer    Int      @id @default(autoincrement())
+  name           String
+  first_surname  String
+  second_surname String
+  dni            String   @unique @db.VarChar(8)
+  sales          Sales[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([name])
+}
+
+model Sales {
+  id_sale        Int      @id @default(autoincrement())
+  date           DateTime @default(now())
+  payment_method String
+  total          Float
+  id_user        Int
+  id_customer    Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user     Users         @relation(fields: [id_user], references: [id_user])
+  customer Customers     @relation(fields: [id_customer], references: [id_customer])
+  details  SaleDetails[]
+
+  @@index([date])
+  @@index([id_user])
+  @@index([id_customer])
+}
+
+model SaleDetails {
+  id_detail  Int      @id @default(autoincrement())
+  id_sale    Int
+  id_product Int
+  quantity   Float
+  unit_price Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  sale    Sales    @relation(fields: [id_sale], references: [id_sale])
+  product Products @relation(fields: [id_product], references: [id_product])
+}
+
+model StockMovements {
+  id_movement   Int      @id @default(autoincrement())
+  id_product    Int
+  quantity      Float
+  movement_type String // "IN" para recepción, "OUT" para ventas
+  reference_id  Int // ID de la recepción o venta asociada
+  createdAt     DateTime @default(now())
+
+  product Products @relation(fields: [id_product], references: [id_product])
+
+  @@index([id_product])
+}
+
+enum Role {
+  ROOT
+  ADMIN
+  EMPLOYEE
+}
+
+model Users {
+  id_user               Int       @id @default(autoincrement())
+  name                  String
+  email                 String    @unique
+  password              String
+  role                  Role      @default(EMPLOYEE)
+  status                Boolean   @default(true)
+  refreshToken          String?   @unique
+  refreshTokenExpiresAt DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  Sales             Sales[]
+  ProductReceptions ProductReceptions[]
+
+  @@index([name])
+}

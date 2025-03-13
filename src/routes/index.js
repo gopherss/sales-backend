@@ -1,0 +1,9 @@
+module.exports.productRoutes = require("./products");
+module.exports.salesRoutes = require("./sales");
+module.exports.customersRoutes = require("./customers");
+module.exports.usersRoutes = require("./users");
+module.exports.stockRoutes = require("./stock");
+module.exports.categoryRoutes = require("./categories");
+module.exports.suppliersRoutes = require("./suppliers");
+module.exports.receptionsRoutes = require("./receptions");
+module.exports.dashboardRoutes = require("./dashboard");
