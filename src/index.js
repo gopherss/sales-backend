@@ -17,7 +17,7 @@ app.use(cors({
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(errorHandler);
-
+app.use('/', (req, res) => { res.send('Api running 🚀') });
 // Usar rutas
 const api = 'api';
 app.use(`/${api}/products`, productRoutes);
@@ -32,5 +32,5 @@ app.use(`/${api}/dashboard`, dashboardRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.info(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
