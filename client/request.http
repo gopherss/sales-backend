@@ -1,12 +1,6 @@
 ### Registrar usuario
-<<<<<<< HEAD
-POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
+POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io/api/users/register
 # POST http://localhost:3000/api/users/register
-=======
-# POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
-
-POST http://localhost:3000/api/users/register
->>>>>>> 79e6d59b7e627cc06f2221d7e57a170402c3fc93
 Content-Type: application/json
   
 {
