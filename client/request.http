@@ -1,11 +1,18 @@
 ### Registrar usuario
+<<<<<<< HEAD
+POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
+# POST http://localhost:3000/api/users/register
+=======
+# POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
+
 POST http://localhost:3000/api/users/register
+>>>>>>> 79e6d59b7e627cc06f2221d7e57a170402c3fc93
 Content-Type: application/json
   
 {
     "name": "Sandro",
-    "email": "root@hacker.com",
-    "password": "root123456",
+    "email": "root@gmail.com",
+    "password": "root123",
     "role": "ROOT"
 }
 
@@ -39,11 +46,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 
 ### Obtener todas las categorías
 GET http://localhost:3000/api/categories
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyMzM0NDksImV4cCI6MTc0MTMxOTg0OX0.ielc2nbNJWNQGt1hl_ay-9Yu2euZp6W-G_3op0-5rx0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 
 ### Crear una categoría
 POST http://localhost:3000/api/categories
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyNDAxMTEsImV4cCI6MTc0MTMyNjUxMX0.F72OFLbWK5OW1pkWnv8ffusZvqh4p5OZeS8XcMduJtc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 Content-Type: application/json
 
 {
@@ -66,12 +73,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 
 ### Crear un producto (Necesita autenticación)
 POST http://localhost:3000/api/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEyNDAxMTEsImV4cCI6MTc0MTMyNjUxMX0.F72OFLbWK5OW1pkWnv8ffusZvqh4p5OZeS8XcMduJtc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 Content-Type: application/json
 
 {
-    "name": "Laptop",
-    "description": "Laptop de última generación",
+    "name": "Teclado Asus",
+    "description": "Teclado última generación Asus",
     "price": 1200.50,
     "unit_type": "Unidad",
     "id_category": 1
@@ -104,7 +111,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 
 ### Crear un cliente
 POST http://localhost:3000/api/customers
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MjUwMjEsImV4cCI6MTc0MTgxMTQyMX0.tM5JqbHFzrCdaR-wazaJDEozwpbJ_Yka6M4k0w2rLz8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 Content-Type: application/json
 
 {
@@ -128,27 +135,29 @@ Content-Type: application/json
 }
 
 ### Obtener el stock con páginanción y busqueda
-GET http://localhost:3000/api/stock?page=1&limit=10&searchTerm=DSLR
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MzIyNDgsImV4cCI6MTc0MTgxODY0OH0.aCZ2JPwzIDBV8Tg1ooSXepVJSy1s1gvnH3Q7XfLzbV0
+GET http://localhost:3000/api/stock?page=1&limit=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 
 
 ### Obtener todas las ventas
 GET http://localhost:3000/api/sales?page=1&limit=10&searchTerm=bcp
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MTg5NzksImV4cCI6MTc0MTgwNTM3OX0.5vcCNX6HyftOt7Syy7uVwhPcA0GxtyE15omgdb-gtYw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
+
 ###  Crear una venta
 POST http://localhost:3000/api/sales
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE3MzIyNDgsImV4cCI6MTc0MTgxODY0OH0.aCZ2JPwzIDBV8Tg1ooSXepVJSy1s1gvnH3Q7XfLzbV0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 Content-Type: application/json
 
 {
-    "id_user": 9,
-    "id_customer": 3,
-    "payment_method": "Tarjeta",
+    "id_user": 1,
+    "id_customer": 1,
+    "payment_method": "BCP",
+    "operation_number": "789465132",
     "details": [
         {
-            "id_product": 37,
+            "id_product": 1,
             "quantity": 1,
-            "unit_price": 899.99
+            "unit_price": 1200.5
         }
     ]
 }
@@ -176,7 +185,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6I
 
 ###  Crear un proveedor
 POST http://localhost:3000/api/suppliers
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzAyNTksImV4cCI6MTc0MTQ1NjY1OX0.23tgBIFZGWAtXKxHqdXfEPovdzbZM12XWPr9qxGAXpU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 Content-Type: application/json
 
 {
@@ -202,20 +211,20 @@ Content-Type: application/json
 
 ###  Obtener todas las recepciones
 GET http://localhost:3000/api/receptions?page=1&limit=10
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDE0NjU4MjAsImV4cCI6MTc0MTU1MjIyMH0.hRSpYCeiwERRnRCnXVXrravNdDGFHXf7Vd7pwM0_4mQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 
 
 ### Crear una nueva recepción
 POST http://localhost:3000/api/receptions
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDEzNzkzMzUsImV4cCI6MTc0MTQ2NTczNX0.tysc_sYSH1D3F596uQm3V9wnysCmNJSiM20d2klHvLk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
 Content-Type: application/json
 
 {
-    "id_product": 44,
+    "id_product": 1,
     "quantity": 50,
-    "purchase_price": 170,
-    "id_supplier": 5,
-    "id_user": 7
+    "purchase_price": 80,
+    "id_supplier": 1,
+    "id_user": 1
 }
 
 ### Actualizar una recepción

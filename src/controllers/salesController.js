@@ -67,9 +67,9 @@ exports.getAll = async (req, res) => {
 // Crear una venta con validación de claves foráneas
 exports.create = async (req, res) => {
     try {
-        const { id_user, id_customer, payment_method, details } = req.body;
+        const { id_user, id_customer, payment_method, details, operation_number } = req.body;
 
-        if (!id_user || !id_customer || !payment_method || !details || details.length === 0) {
+        if (!id_user || !id_customer || !payment_method || !details || details.length === 0 || !operation_number) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
         const userExists = await prisma.users.findUnique({ where: { id_user } });
@@ -112,6 +112,7 @@ exports.create = async (req, res) => {
                     id_user,
                     id_customer,
                     payment_method,
+                    operation_number,
                     total,
                     details: {
                         create: details.map(d => ({

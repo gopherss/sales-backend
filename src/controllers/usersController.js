@@ -49,7 +49,7 @@ exports.refreshToken = async (req, res) => {
         }
 
         // Generar nuevo Access Token y Refresh Token
-        const newAccessToken = jwt.sign({ id: user.id_user, role: user.role }, SECRET_KEY, { expiresIn: "15m" });
+        const newAccessToken = jwt.sign({ id: user.id_user, role: user.role }, SECRET_KEY, { expiresIn: "24h" });
         const newRefreshToken = uuidv4();
         const newRefreshTokenExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
