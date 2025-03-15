@@ -1,4 +1,6 @@
 ### Registrar usuario
+# POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
+
 POST http://localhost:3000/api/users/register
 Content-Type: application/json
   
