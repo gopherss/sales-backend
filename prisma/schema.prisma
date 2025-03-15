@@ -88,14 +88,15 @@ model Customers {
 }
 
 model Sales {
-  id_sale        Int      @id @default(autoincrement())
-  date           DateTime @default(now())
-  payment_method String
-  total          Float
-  id_user        Int
-  id_customer    Int
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id_sale          Int      @id @default(autoincrement())
+  date             DateTime @default(now())
+  payment_method   String
+  operation_number String   @unique
+  total            Float
+  id_user          Int
+  id_customer      Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   user     Users         @relation(fields: [id_user], references: [id_user])
   customer Customers     @relation(fields: [id_customer], references: [id_customer])
