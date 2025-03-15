@@ -69,8 +69,6 @@ exports.create = async (req, res) => {
     try {
         const { id_user, id_customer, payment_method, details, operation_number } = req.body;
 
-        console.log(req.body);
-
         if (!id_user || !id_customer || !payment_method || !details || details.length === 0 || !operation_number) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
