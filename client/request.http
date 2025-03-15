@@ -1,13 +1,13 @@
 ### Registrar usuario
-POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io/api/users/register
 # POST http://localhost:3000/api/users/register
+POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io/api/users/register
 Content-Type: application/json
-  
+
 {
-    "name": "Sandro",
-    "email": "root@gmail.com",
-    "password": "root123",
-    "role": "ROOT"
+    "name": "Homero Simpson",
+    "email": "homero@gmail.com",
+    "password": "homero123456",
+    "role": "ADMIN"
 }
 
 ### Iniciar sesión
@@ -15,7 +15,7 @@ POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
-    "email": "root@hacker.com",
+    "email": "root@gmail.com",
     "password": "root123456"
 }
 
