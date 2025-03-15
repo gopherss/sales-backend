@@ -5,9 +5,9 @@ Content-Type: application/json
 
 {
     "name": "Homero Simpson",
-    "email": "homero@gmail.com",
-    "password": "homero123456",
-    "role": "ADMIN"
+    "email": "root@gmail.com",
+    "password": "root123456",
+    "role": "ROOT"
 }
 
 ### Iniciar sesión

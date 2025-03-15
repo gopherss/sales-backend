@@ -88,9 +88,6 @@ exports.logout = async (req, res) => {
 exports.register = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
-
-        console.log(req.body);
-
         if (!name || !email || !password || !role) {
             return res.status(400).json({ error: "Todos los campos son obligatorios." });
         }
