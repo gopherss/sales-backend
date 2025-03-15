@@ -4,7 +4,9 @@ const usersController = require("../controllers/usersController");
 const { authMiddleware, roleMiddleware } = require("../middlewares/auth");
 const { ROOT, ADMIN, EMPLOYEE } = require('../configs/constants');
 
-router.post("/register", usersController.register);
+router.post("/register", authMiddleware,
+    roleMiddleware([ROOT, ADMIN]),
+    usersController.register);
 
 router.post("/login", usersController.login);
 router.post("/refresh-token", usersController.refreshToken);
