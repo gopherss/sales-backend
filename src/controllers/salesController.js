@@ -22,7 +22,7 @@ exports.getAll = async (req, res) => {
                 WHERE 
                     LOWER(c.name) ILIKE LOWER($1) OR
                     LOWER(s.payment_method) ILIKE LOWER($1)
-                ORDER BY s.createdAt DESC
+                ORDER BY s."createdAt" DESC
                 LIMIT $2 OFFSET $3
             `;
 
@@ -45,7 +45,7 @@ exports.getAll = async (req, res) => {
                 take: limitNumber,
                 orderBy: { createdAt: "desc" },
                 include: {
-                    customer: { select: { name: true } },
+                    customer: { select: { name: true, first_surname: true, second_surname: true } },
                     details: { include: { product: true } }
                 }
             });
@@ -151,68 +151,73 @@ exports.update = async (req, res) => {
         const { id } = req.params;
         const { id_customer, payment_method, details } = req.body;
 
-        // 1️⃣ Verificar si la venta existe
-        const existingSale = await prisma.sales.findUnique({
-            where: { id_sale: parseInt(id) },
-            include: { details: true } // Trae los detalles actuales de la venta
-        });
-
-        if (!existingSale) {
-            return res.status(404).json({ error: "Venta no encontrada" });
-        }
-
-        // 2️⃣ Restaurar el stock de los productos anteriores
-        for (const detail of existingSale.details) {
-            await prisma.stockMovements.create({
-                data: {
-                    id_product: detail.id_product,
-                    quantity: detail.quantity,
-                    movement_type: "IN", // Devuelve el stock
-                    reference_id: parseInt(id)
-                }
+        const updatedSale = await prisma.$transaction(async (prisma) => {
+            // 1️⃣ Verificar si la venta existe
+            const existingSale = await prisma.sales.findUnique({
+                where: { id_sale: parseInt(id) },
+                include: { details: true } // Trae los detalles actuales de la venta
             });
-        }
 
-        // 3️⃣ Calcular el nuevo total de la venta
-        let total = existingSale.total;
-        if (details && details.length > 0) {
-            total = details.reduce((sum, d) => sum + d.quantity * d.unit_price, 0);
-        }
+            if (!existingSale) {
+                throw new Error("Venta no encontrada"); // Lanza error para rollback
+            }
 
-        // 4️⃣ Actualizar la venta y los detalles
-        const updatedSale = await prisma.sales.update({
-            where: { id_sale: parseInt(id) },
-            data: {
-                id_customer,
-                payment_method,
-                total,
-                details: {
-                    deleteMany: {}, // Eliminar detalles previos
-                    create: details.map(d => ({
-                        id_product: d.id_product,
-                        quantity: d.quantity,
-                        unit_price: d.unit_price
-                    }))
-                }
-            },
-            include: { details: true }
-        });
+            // 2️⃣ Restaurar el stock de los productos anteriores
+            await Promise.all(
+                existingSale.details.map((detail) =>
+                    prisma.stockMovements.create({
+                        data: {
+                            id_product: detail.id_product,
+                            quantity: detail.quantity,
+                            movement_type: "IN", // Devuelve el stock
+                            reference_id: parseInt(id)
+                        }
+                    })
+                )
+            );
 
-        // 5️⃣ Registrar el nuevo movimiento de stock (descontar)
-        for (const detail of details) {
-            await prisma.stockMovements.create({
+            // 3️⃣ Calcular el nuevo total de la venta
+            const total = details.reduce((sum, d) => sum + d.quantity * d.unit_price, 0);
+
+            // 4️⃣ Actualizar la venta y los detalles
+            const updatedSale = await prisma.sales.update({
+                where: { id_sale: parseInt(id) },
                 data: {
-                    id_product: detail.id_product,
-                    quantity: detail.quantity,
-                    movement_type: "OUT", // Descuenta del stock
-                    reference_id: parseInt(id)
-                }
+                    id_customer,
+                    payment_method,
+                    total,
+                    details: {
+                        deleteMany: {}, // Eliminar detalles previos
+                        create: details.map(d => ({
+                            id_product: d.id_product,
+                            quantity: d.quantity,
+                            unit_price: d.unit_price
+                        }))
+                    }
+                },
+                include: { details: true }
             });
-        }
+
+            // 5️⃣ Registrar el nuevo movimiento de stock (descontar)
+            await Promise.all(
+                details.map((detail) =>
+                    prisma.stockMovements.create({
+                        data: {
+                            id_product: detail.id_product,
+                            quantity: detail.quantity,
+                            movement_type: "OUT", // Descuenta del stock
+                            reference_id: parseInt(id)
+                        }
+                    })
+                )
+            );
+
+            return updatedSale;
+        });
 
         res.json(updatedSale);
     } catch (error) {
         console.error("Error en update:", error);
-        res.status(400).json({ error: "Error al actualizar venta" });
+        res.status(400).json({ error: error.message || "Error al actualizar venta" });
     }
 };
