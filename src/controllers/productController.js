@@ -55,6 +55,7 @@ exports.getAll = async (req, res) => {
                     status: true,
                     createdAt: true,
                     id_category: true,
+                    fecha_vencimiento: true
                 }
             });
         }
@@ -75,63 +76,76 @@ exports.getAll = async (req, res) => {
 // Crear un producto
 exports.create = async (req, res) => {
     try {
-        const { name, description, price, unit_type, id_category } = req.body;
+        const { name, description, price, unit_type, id_category, fecha_vencimiento } = req.body;
 
         if (!name || !price || !unit_type || !id_category) {
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+            return res.status(400).json({ error: "Los campos nombre, precio, tipo de unidad y categoría son obligatorios" });
+        }
+
+        const dataToCreate = {
+            name: name.trim(),
+            price: parseFloat(price),
+            unit_type,
+            id_category: parseInt(id_category, 10),
+            description: description?.trim(),
+        };
+
+        if (fecha_vencimiento) {
+            dataToCreate.fecha_vencimiento = new Date(fecha_vencimiento);
         }
 
         const newProduct = await prisma.products.create({
-            data: {
-                name: name.trim(),
-                description: description?.trim(),
-                price: parseFloat(price),
-                unit_type,
-                id_category: parseInt(id_category, 10)
-            },
+            data: dataToCreate,
         });
         res.status(201).json(newProduct);
     } catch (error) {
+        console.error("Error al crear producto:", error);
         res.status(400).json({ error: "Error al crear producto" });
     }
 };
 
 // Actualizar un producto
+// Actualizar un producto
 exports.update = async (req, res) => {
     try {
-        const { name, description, sku, price, unit_type, id_category, status } = req.body;
-        const id = parseInt(req.params.id, 10);
+        const { id } = req.params;
+        const { name, description, price, unit_type, id_category, status, sku, fecha_vencimiento } = req.body;
 
-        // Verificar si el producto existe
-        const product = await prisma.products.findUnique({ where: { id_product: id } });
+        const productId = parseInt(id, 10);
+        if (isNaN(productId)) {
+            return res.status(400).json({ error: "El ID del producto no es válido" });
+        }
 
-        if (!product) {
+        const existingProduct = await prisma.products.findUnique({
+            where: { id_product: productId },
+        });
+
+        if (!existingProduct) {
             return res.status(404).json({ error: "Producto no encontrado" });
         }
 
-        if (product.sku !== sku) {
-            const existingSku = await prisma.products.findUnique({ where: { sku } });
+        const dataToUpdate = {
+            name: name?.trim(),
+            description: description?.trim(),
+            price: price !== undefined ? parseFloat(price) : undefined,
+            unit_type,
+            id_category: id_category !== undefined ? parseInt(id_category, 10) : undefined,
+            status,
+            sku: sku?.trim(),
+        };
 
-            if (existingSku) {
-                return res.status(400).json({ message: "El SKU ya está en uso. Elige otro." });
-            }
+        if (fecha_vencimiento !== undefined) {
+            dataToUpdate.fecha_vencimiento = fecha_vencimiento ? new Date(fecha_vencimiento) : null;
         }
 
         const updatedProduct = await prisma.products.update({
-            where: { id_product: id },
-            data: {
-                name: name?.trim(),
-                description: description?.trim(),
-                sku,
-                price: parseFloat(price),
-                unit_type,
-                id_category: parseInt(id_category, 10),
-                status: Boolean(status)
-            },
+            where: { id_product: productId },
+            data: dataToUpdate,
         });
 
         res.json(updatedProduct);
     } catch (error) {
-        res.status(400).json({ error: "Error al actualizar producto" });
+        console.error("Error al actualizar producto:", error);
+        res.status(500).json({ error: "Error al actualizar producto" });
     }
 };
