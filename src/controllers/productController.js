@@ -105,7 +105,6 @@ exports.create = async (req, res) => {
 };
 
 // Actualizar un producto
-// Actualizar un producto
 exports.update = async (req, res) => {
     try {
         const { id } = req.params;
