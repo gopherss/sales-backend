@@ -84,7 +84,7 @@ exports.getAll = async (req, res) => {
             );
             return {
                 ...product,
-                stock: stockInfo?.stock || 0,
+                stock: stockInfo?.stock || 0, //dejamos stock en datos 0 en caso de que no devuelva nada
             };
         });
 
