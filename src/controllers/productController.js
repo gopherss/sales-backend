@@ -8,21 +8,21 @@ exports.getAll = async (req, res) => {
         let products = [];
         let totalProducts = 0;
 
-        if (searchTerm) {
-            // Use raw SQL for accent-insensitive search
-            const normalizedSearchTerm = searchTerm.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        if (searchTerm.trim()) {
+            const normalizedSearchTerm = searchTerm
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
 
-            // Raw SQL query for PostgreSQL (adjust for your database)
             const query = `
-                SELECT * FROM "Products"
-                WHERE 
-                    LOWER(name) ILIKE LOWER($1) OR
-                    LOWER(description) ILIKE LOWER($1)
-                ORDER BY id_product
-                LIMIT $2 OFFSET $3
-            `;
+        SELECT * FROM "Products"
+        WHERE 
+          LOWER(name) ILIKE LOWER($1) OR
+          LOWER(description) ILIKE LOWER($1)
+        ORDER BY id_product
+        LIMIT $2 OFFSET $3
+      `;
 
-            // Execute the raw query
             products = await prisma.$queryRawUnsafe(
                 query,
                 `%${normalizedSearchTerm}%`,
@@ -30,17 +30,18 @@ exports.getAll = async (req, res) => {
                 parseInt(skip)
             );
 
-            // Count total products matching the search term
             const countQuery = `
-                SELECT COUNT(*) as total FROM "Products"
-                WHERE 
-                    LOWER(name) ILIKE LOWER($1) OR
-                    LOWER(description) ILIKE LOWER($1)
-            `;
-            const totalResult = await prisma.$queryRawUnsafe(countQuery, `%${normalizedSearchTerm}%`);
+        SELECT COUNT(*) as total FROM "Products"
+        WHERE 
+          LOWER(name) ILIKE LOWER($1) OR
+          LOWER(description) ILIKE LOWER($1)
+      `;
+            const totalResult = await prisma.$queryRawUnsafe(
+                countQuery,
+                `%${normalizedSearchTerm}%`
+            );
             totalProducts = parseInt(totalResult[0].total);
         } else {
-            // If no search term, use Prisma's built-in methods
             totalProducts = await prisma.products.count();
             products = await prisma.products.findMany({
                 skip: parseInt(skip),
@@ -55,17 +56,44 @@ exports.getAll = async (req, res) => {
                     status: true,
                     createdAt: true,
                     id_category: true,
-                    fecha_vencimiento: true
-                }
+                    fecha_vencimiento: true,
+                },
             });
         }
+
+        // 🔄 Agregar el stock a cada producto (para ambos casos)
+        const productIds = products.map((p) => p.id_product);
+
+        const stockData = await Promise.all(
+            productIds.map(async (id_product) => {
+                const result = await prisma.stockMovements.aggregate({
+                    where: { id_product },
+                    _sum: { quantity: true },
+                });
+                return {
+                    id_product,
+                    stock: result._sum.quantity || 0,
+                };
+            })
+        );
+
+        // Mezclar el stock con los productos
+        products = products.map((product) => {
+            const stockInfo = stockData.find(
+                (s) => s.id_product === product.id_product
+            );
+            return {
+                ...product,
+                stock: stockInfo?.stock || 0,
+            };
+        });
 
         res.json({
             page: parseInt(page),
             limit: parseInt(limit),
             total: totalProducts,
             totalPages: Math.ceil(totalProducts / limit),
-            data: products
+            data: products,
         });
     } catch (error) {
         console.error("Error en getAll:", error);
