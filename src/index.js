@@ -10,7 +10,8 @@ const {
 
 const app = express();
 app.use(cors({
-    origin: '*',
+    // origin: 'http://localhost:5173',
+    origin: 'https://ventasdev.netlify.app',
     methods: ['POST', 'GET', 'PUT']
 }));
 

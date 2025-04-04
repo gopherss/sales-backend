@@ -8,21 +8,21 @@ exports.getAll = async (req, res) => {
         let products = [];
         let totalProducts = 0;
 
-        if (searchTerm) {
-            // Use raw SQL for accent-insensitive search
-            const normalizedSearchTerm = searchTerm.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        if (searchTerm.trim()) {
+            const normalizedSearchTerm = searchTerm
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
 
-            // Raw SQL query for PostgreSQL (adjust for your database)
             const query = `
-                SELECT * FROM "Products"
-                WHERE 
-                    LOWER(name) ILIKE LOWER($1) OR
-                    LOWER(description) ILIKE LOWER($1)
-                ORDER BY id_product
-                LIMIT $2 OFFSET $3
-            `;
+        SELECT * FROM "Products"
+        WHERE 
+          LOWER(name) ILIKE LOWER($1) OR
+          LOWER(description) ILIKE LOWER($1)
+        ORDER BY id_product
+        LIMIT $2 OFFSET $3
+      `;
 
-            // Execute the raw query
             products = await prisma.$queryRawUnsafe(
                 query,
                 `%${normalizedSearchTerm}%`,
@@ -30,17 +30,18 @@ exports.getAll = async (req, res) => {
                 parseInt(skip)
             );
 
-            // Count total products matching the search term
             const countQuery = `
-                SELECT COUNT(*) as total FROM "Products"
-                WHERE 
-                    LOWER(name) ILIKE LOWER($1) OR
-                    LOWER(description) ILIKE LOWER($1)
-            `;
-            const totalResult = await prisma.$queryRawUnsafe(countQuery, `%${normalizedSearchTerm}%`);
+        SELECT COUNT(*) as total FROM "Products"
+        WHERE 
+          LOWER(name) ILIKE LOWER($1) OR
+          LOWER(description) ILIKE LOWER($1)
+      `;
+            const totalResult = await prisma.$queryRawUnsafe(
+                countQuery,
+                `%${normalizedSearchTerm}%`
+            );
             totalProducts = parseInt(totalResult[0].total);
         } else {
-            // If no search term, use Prisma's built-in methods
             totalProducts = await prisma.products.count();
             products = await prisma.products.findMany({
                 skip: parseInt(skip),
@@ -55,16 +56,44 @@ exports.getAll = async (req, res) => {
                     status: true,
                     createdAt: true,
                     id_category: true,
-                }
+                    fecha_vencimiento: true,
+                },
             });
         }
+
+        // 🔄 Agregar el stock a cada producto (para ambos casos)
+        const productIds = products.map((p) => p.id_product);
+
+        const stockData = await Promise.all(
+            productIds.map(async (id_product) => {
+                const result = await prisma.stockMovements.aggregate({
+                    where: { id_product },
+                    _sum: { quantity: true },
+                });
+                return {
+                    id_product,
+                    stock: result._sum.quantity || 0,
+                };
+            })
+        );
+
+        // Mezclar el stock con los productos
+        products = products.map((product) => {
+            const stockInfo = stockData.find(
+                (s) => s.id_product === product.id_product
+            );
+            return {
+                ...product,
+                stock: stockInfo?.stock || 0, //dejamos stock en datos 0 en caso de que no devuelva nada
+            };
+        });
 
         res.json({
             page: parseInt(page),
             limit: parseInt(limit),
             total: totalProducts,
             totalPages: Math.ceil(totalProducts / limit),
-            data: products
+            data: products,
         });
     } catch (error) {
         console.error("Error en getAll:", error);
@@ -75,23 +104,30 @@ exports.getAll = async (req, res) => {
 // Crear un producto
 exports.create = async (req, res) => {
     try {
-        const { name, description, price, unit_type, id_category } = req.body;
+        const { name, description, price, unit_type, id_category, fecha_vencimiento } = req.body;
 
         if (!name || !price || !unit_type || !id_category) {
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+            return res.status(400).json({ error: "Los campos nombre, precio, tipo de unidad y categoría son obligatorios" });
+        }
+
+        const dataToCreate = {
+            name: name.trim(),
+            price: parseFloat(price),
+            unit_type,
+            id_category: parseInt(id_category, 10),
+            description: description?.trim(),
+        };
+
+        if (fecha_vencimiento) {
+            dataToCreate.fecha_vencimiento = new Date(fecha_vencimiento);
         }
 
         const newProduct = await prisma.products.create({
-            data: {
-                name: name.trim(),
-                description: description?.trim(),
-                price: parseFloat(price),
-                unit_type,
-                id_category: parseInt(id_category, 10)
-            },
+            data: dataToCreate,
         });
         res.status(201).json(newProduct);
     } catch (error) {
+        console.error("Error al crear producto:", error);
         res.status(400).json({ error: "Error al crear producto" });
     }
 };
@@ -99,39 +135,44 @@ exports.create = async (req, res) => {
 // Actualizar un producto
 exports.update = async (req, res) => {
     try {
-        const { name, description, sku, price, unit_type, id_category, status } = req.body;
-        const id = parseInt(req.params.id, 10);
+        const { id } = req.params;
+        const { name, description, price, unit_type, id_category, status, sku, fecha_vencimiento } = req.body;
 
-        // Verificar si el producto existe
-        const product = await prisma.products.findUnique({ where: { id_product: id } });
+        const productId = parseInt(id, 10);
+        if (isNaN(productId)) {
+            return res.status(400).json({ error: "El ID del producto no es válido" });
+        }
 
-        if (!product) {
+        const existingProduct = await prisma.products.findUnique({
+            where: { id_product: productId },
+        });
+
+        if (!existingProduct) {
             return res.status(404).json({ error: "Producto no encontrado" });
         }
 
-        if (product.sku !== sku) {
-            const existingSku = await prisma.products.findUnique({ where: { sku } });
+        const dataToUpdate = {
+            name: name?.trim(),
+            description: description?.trim(),
+            price: price !== undefined ? parseFloat(price) : undefined,
+            unit_type,
+            id_category: id_category !== undefined ? parseInt(id_category, 10) : undefined,
+            status,
+            sku: sku?.trim(),
+        };
 
-            if (existingSku) {
-                return res.status(400).json({ message: "El SKU ya está en uso. Elige otro." });
-            }
+        if (fecha_vencimiento !== undefined) {
+            dataToUpdate.fecha_vencimiento = fecha_vencimiento ? new Date(fecha_vencimiento) : null;
         }
 
         const updatedProduct = await prisma.products.update({
-            where: { id_product: id },
-            data: {
-                name: name?.trim(),
-                description: description?.trim(),
-                sku,
-                price: parseFloat(price),
-                unit_type,
-                id_category: parseInt(id_category, 10),
-                status: Boolean(status)
-            },
+            where: { id_product: productId },
+            data: dataToUpdate,
         });
 
         res.json(updatedProduct);
     } catch (error) {
-        res.status(400).json({ error: "Error al actualizar producto" });
+        console.error("Error al actualizar producto:", error);
+        res.status(500).json({ error: "Error al actualizar producto" });
     }
 };

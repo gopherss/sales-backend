@@ -1,18 +1,12 @@
 ### Registrar usuario
-<<<<<<< HEAD
-POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
-# POST http://localhost:3000/api/users/register
-=======
-# POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io//api/users/register
-
-POST http://localhost:3000/api/users/register
->>>>>>> 79e6d59b7e627cc06f2221d7e57a170402c3fc93
+#POST http://localhost:3000/api/users/register
+POST https://app-378d3765-4b16-449c-b293-fe394ec5dd51.cleverapps.io/api/users/register
 Content-Type: application/json
-  
+
 {
-    "name": "Sandro",
-    "email": "root@gmail.com",
-    "password": "root123",
+    "name": "SandroCP",
+    "email": "root@hacker.com",
+    "password": "root123456",
     "role": "ROOT"
 }
 
@@ -140,8 +134,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 
 
 ### Obtener todas las ventas
-GET http://localhost:3000/api/sales?page=1&limit=10&searchTerm=bcp
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIwMTQ3OTksImV4cCI6MTc0MjAxNTY5OX0.0CRhhkS_Y6fcoRJx_GJBwV25Hy4V3g6fkwKSUDPV-VY
+GET http://localhost:3000/api/sales?page=1&limit=10&searchTerm=sandro
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlJPT1QiLCJpYXQiOjE3NDIzNTcyNTQsImV4cCI6MTc0MjM1ODE1NH0.IjnHu5ILKKUwp3K4GwhW3UrxulVuZ0xly4xHo4qMb4A
 
 ###  Crear una venta
 POST http://localhost:3000/api/sales

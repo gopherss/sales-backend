@@ -13,16 +13,17 @@ datasource db {
 }
 
 model Products {
-  id_product  Int      @id @default(autoincrement())
-  name        String
-  description String
-  sku         String?  @unique
-  price       Float
-  unit_type   String
-  status      Boolean  @default(true)
-  id_category Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id_product        Int       @id @default(autoincrement())
+  name              String
+  description       String
+  sku               String?   @unique
+  price             Float
+  unit_type         String
+  status            Boolean   @default(true)
+  id_category       Int
+  fecha_vencimiento DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   category          Categories          @relation(fields: [id_category], references: [id_category])
   ProductReceptions ProductReceptions[]
