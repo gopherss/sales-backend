@@ -7,7 +7,8 @@
     "dev": "nodemon src/",
     "start": "node src/",
     "build": "prisma generate",
-    "prisma:deploy": "prisma migrate deploy"
+    "prisma:deploy": "prisma migrate deploy",
+    "seed": "node prisma/seed.js"
   },
   "keywords": [],
   "author": "",

@@ -25,6 +25,8 @@ exports.login = async (req, res) => {
 
         res.json({ accessToken, refreshToken });
     } catch (error) {
+
+        console.log(error)
         res.status(500).json({ error: "Error en el login" });
     }
 };
